@@ -42,7 +42,7 @@ A Python-based global solution for scanning passports and verifying visa validit
 ## Project Architecture:
 
 ### Architecture Diagram:
-![Architecture](./worldwide_visa_check_architecture.png)
+![Architecture](./images/worldwide_visa_check_architecture.png)
 
 ### Architecture Description:
 ```
