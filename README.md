@@ -1,187 +1,269 @@
-[![Worldwide Visa Check](https://github.com/fahmifareed/Worldwide-Visa-Check/blob/main/banner.png)](https://github.com/fahmifareed/Worldwide-Visa-Check)
-# Worldwide Visa Check
 
-![Heroku](https://img.shields.io/badge/Heroku-Deployed-blueviolet?logo=heroku&logoColor=white)
+![Banner](/banner.png)
 ![Python](https://img.shields.io/badge/Python-3.9-blue?logo=python&logoColor=white)
 ![Flask](https://img.shields.io/badge/Flask-Framework-green?logo=flask&logoColor=white)
+![OpenCV](https://img.shields.io/badge/OpenCV-4.5.3.56-green) ![Tesseract](https://img.shields.io/badge/Tesseract-OCR-red) ![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-1.4.22-lightgrey)
+![Heroku](https://img.shields.io/badge/Heroku-Deployed-blueviolet?logo=heroku&logoColor=white)
 ![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-blue?logo=github-actions&logoColor=white)
 ![License](https://img.shields.io/github/license/<your-username>/worldwide-visa-check)
 
-### A Global Solution for Scanning Passports and Validating Visa Legality
+# Worldwide Visa Check
+A Python-based global solution for scanning passports and verifying visa validity using Optical Character Recognition (OCR) and various API/data sources.
 
----
+## Key Features:
+- **Passport Image Upload or Scanning**: Allows users to upload or scan passport images.
+- **OCR for Passport Data Extraction**: Uses Tesseract OCR to extract passport details such as passport number, nationality, and date of birth.
+- **Visa Validity Check**: Validates visa information against predefined rules (or through external API integration if available).
+- **User Authentication**: Secure user registration and login system using Flask-Login.
+- **Database Management**: Stores passport and visa details using SQLite.
+- **Security**: Data encryption for sensitive information and HTTPS support for secure communication.
 
-## Project Overview
+## Table of Contents
+1. [Technologies Used](#technologies-used)
+2. [Project Architecture](#project-architecture)
+3. [Installation](#installation)
+4. [Usage](#usage)
+5. [API Endpoints](#api-endpoints)
+6. [Security Considerations](#security-considerations)
+7. [Deployment](#deployment)
+8. [ToDo](#todo)
+9. [Contribution](#contribution)
+10. [License](#license)
 
-The **Worldwide Visa Check** application is designed to allow users to scan passports and validate visas using Optical Character Recognition (OCR) technology. The application extracts key passport information, validates visas based on rules or external APIs, and stores the scanned data for auditing purposes. Built with security, efficiency, and scalability in mind, the project is deployed using continuous integration and continuous deployment (CI/CD) practices, ensuring smooth updates and automated deployment.
+## Technologies Used:
+- **Python 3.9**: Core programming language.
+- **Flask**: Web framework used for creating the web application.
+- **OpenCV**: For image processing and passport scanning.
+- **Tesseract-OCR**: Optical Character Recognition library for extracting text from passport images.
+- **SQLAlchemy**: ORM for database management (SQLite).
+- **Flask-Login**: For user authentication and session management.
+- **Flask-WTF**: For secure forms and CSRF protection.
 
----
+## Project Architecture:
 
-## Key Features
+### Architecture Diagram:
+![Architecture](./worldwide_visa_check_architecture.png)
 
-- **User Authentication**
-  - Secure registration and login.
-  - Password hashing and session management.
-  - Protect routes to allow only authorized users to upload passport images.
-
-- **Passport Image Upload & OCR**
-  - Upload passport images in `.png`, `.jpg`, or `.jpeg` formats.
-  - Extract data such as passport number, name, issuing country, date of birth, and expiration date using Tesseract OCR.
-  - Preprocess images using OpenCV to improve OCR accuracy.
-
-- **Visa Validation**
-  - Extract visa-related information such as visa number, issue date, and expiration date.
-  - Validate the visa based on predefined rules (e.g., expiration check) or external APIs for country-specific visa validation.
-
-- **Data Security**
-  - Encrypt sensitive data such as passport and visa details before storing them in the database.
-  - CSRF protection for forms and secure handling of file uploads.
-  - User authentication and access control using Flask-Login and Flask-WTF.
-
-- **Database Integration**
-  - Use SQLite or any relational database (MySQL/PostgreSQL) to store users, passports, and visas.
-  - Establish relationships between users and their scanned passport/visa data.
-  - Store validation logs for auditing and future use.
-
----
-
-## Technologies Used
-
-- **Backend**: 
-  - Python (Flask Framework)
-  - Flask-Login & Flask-WTF for security and authentication.
-  - OpenCV for image processing.
-  - Tesseract for OCR.
-
-- **Frontend**:
-  - HTML/CSS for the user interface.
-  - Flask Jinja2 Templates for dynamic content.
-
-- **Database**:
-  - SQLite (or MySQL/PostgreSQL) using SQLAlchemy ORM.
-
-- **CI/CD**:
-  - GitHub Actions for automated testing and deployment.
-  - Deployment on **Heroku** or **AWS Elastic Beanstalk**.
-
----
-
-## Project Setup
-
-### 1. Clone the Repository
-
-```bash
-git clone https://github.com/<your-username>/worldwide-visa-check.git
-cd worldwide-visa-check
+### Architecture Description:
+```
++----------------------------------------------+
+|               User Interface (UI)            |
+|  - HTML/CSS/JavaScript                       |
+|  - Passport Image Upload Form                |
++----------------------------------------------+
+                       |
+                       v
++--------------------------------------------------+
+|              Web Application (Flask)             |
+|  - Routes:                                       |
+|    - `/upload`: Handles passport image upload    |
+|    - `/register`: User registration              |
+|    - `/login`: User login                        |
+|  - Authentication: Flask-Login                   |
+|  - Handles form submissions and processes data   |
++--------------------------------------------------+
+                       |
+                       v
++--------------------------------------------------+
+|        OCR & Image Processing                    |
+|  - Tesseract: Extracts text from passport images  |
+|  - OpenCV: Preprocesses images (grayscale, etc.)  |
+|  - Focuses on the MRZ for passport data           |
++--------------------------------------------------+
+                       |
+                       v
++--------------------------------------------------+
+|               Visa Validation Logic              |
+|  - Validates visa expiration date                |
+|  - Checks issuing country and visa number        |
+|  - Predefined rules or external API integration  |
++--------------------------------------------------+
+                       |
+                       v
++--------------------------------------------------+
+|             Database (SQLite/SQLAlchemy)         |
+|  - User Table: Stores user credentials           |
+|  - Passport Table: Stores passport details       |
+|  - Visa Table: Stores visa details               |
+|  - Logs all scans for auditing                   |
++--------------------------------------------------+
+                       |
+                       v
++--------------------------------------------------+
+|               Security Layer                     |
+|  - User Authentication via Flask-Login           |
+|  - Data encryption using cryptography library    |
+|  - HTTPS for secure communication                |
+|  - CSRF protection via Flask-WTF                 |
++--------------------------------------------------+
+                       |
+                       v
++--------------------------------------------------+
+|               Deployment (Cloud)                 |
+|  - Dockerized for portability                    |
+|  - Deployable on Heroku or AWS                   |
+|  - Autoscaling and monitoring for production     |
++--------------------------------------------------+
 ```
 
-### 2. Set Up the Python Virtual Environment
+### Workflow:
+1. **User Interaction**: Users interact with the web interface to upload passport images.
+2. **File Upload**: The Flask backend processes the uploaded images.
+3. **OCR & Processing**: The image is preprocessed, and Tesseract extracts passport details.
+4. **Visa Validation**: Visa information is validated using predefined rules or external APIs.
+5. **Database Storage**: All passport and visa details are stored securely in SQLite.
+6. **Security**: Data encryption and authentication ensure secure handling of sensitive data.
+7. **Deployment**: The app is packaged in Docker and deployed to cloud platforms like Heroku or AWS.
 
-```bash
-python -m venv venv
-source venv/bin/activate   # For Windows: venv\Scripts\activate
-```
+## Installation:
 
-### 3. Install Dependencies
+### Prerequisites:
+- Python 3.9+
+- Tesseract-OCR installed on your machine (for OCR functionality)
+  - Install Tesseract: [Installation Guide](https://github.com/tesseract-ocr/tesseract)
+  
+### Steps:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/fahmifareed/worldwide-visa-check.git
+   cd worldwide-visa-check
+   ```
 
-```bash
-pip install -r requirements.txt
-```
+2. Set up a virtual environment:
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows use: venv\Scripts\activate
+   ```
 
-### 4. Set Up Environment Variables
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-Create a `.env` file for your environment variables:
+4. Initialize the database:
+   ```bash
+   python
+   >>> from app import create_app, db
+   >>> app = create_app()
+   >>> with app.app_context():
+   >>>     db.create_all()
+   ```
 
-```bash
-SECRET_KEY=your_secret_key
-DATABASE_URL=sqlite:///visa_check.db  # or your preferred database URL
-```
+5. Run the application:
+   ```bash
+   flask run
+   ```
 
-### 5. Initialize the Database
+6. Open a browser and visit: `http://127.0.0.1:5000`
 
-```bash
-flask db init
-flask db migrate
-flask db upgrade
-```
+## Usage:
 
-### 6. Run the Application Locally
+### Registration:
+- Visit `/register` to create a new user account.
+- Provide a username, email, and password to register.
 
-```bash
-flask run
-```
+### Login:
+- After registering, visit `/login` to log in with your credentials.
 
----
+### Passport Upload:
+- Once logged in, navigate to the homepage.
+- Upload an image of a passport to initiate OCR processing.
+- The system will extract passport details (name, passport number, nationality) and validate visa details if available.
 
-## Running Tests
+## API Endpoints:
 
-You can run unit and integration tests (if configured) to verify that the application works as expected:
+### 1. `POST /upload`:
+Uploads a passport image and returns extracted details.
+- **Request**: Form data with the passport image file.
+- **Response**: Extracted passport and visa details.
 
-```bash
-pytest
-```
+### 2. `POST /register`:
+Registers a new user.
+- **Request**: JSON data with `username`, `email`, and `password`.
+- **Response**: Success or failure message.
 
----
+### 3. `POST /login`:
+Logs in an existing user.
+- **Request**: JSON data with `username` and `password`.
+- **Response**: Success or failure message.
 
-## CI/CD Deployment
+### 4. `GET /logout`:
+Logs out the current user.
+- **Request**: No data required.
+- **Response**: Redirects to login page.
 
-### Heroku Deployment
+## Security Considerations:
 
-1. Log in to Heroku:
+- **Encryption**: Passport and visa details are encrypted before being stored in the database using the `cryptography` library.
+- **HTTPS**: Use HTTPS for secure data transmission in production environments.
+- **Authentication**: User authentication is handled with Flask-Login. Passwords are hashed and stored securely.
+- **CSRF Protection**: Flask-WTF provides built-in CSRF protection for all forms.
+
+## Deployment:
+
+### Heroku:
+1. Install the Heroku CLI and log in.
    ```bash
    heroku login
    ```
 
-2. Create a Heroku app:
+2. Create a new Heroku app:
    ```bash
    heroku create worldwide-visa-check
    ```
 
-3. Add your remote Heroku repository:
-   ```bash
-   git remote add heroku https://git.heroku.com/worldwide-visa-check.git
-   ```
-
-4. Push to Heroku:
+3. Push the code to Heroku:
    ```bash
    git push heroku main
    ```
 
-### AWS Deployment
-
-1. Initialize the Elastic Beanstalk environment:
+4. Set up environment variables for Flask:
    ```bash
-   eb init -p python-3.7 worldwide-visa-check --region us-east-1
+   heroku config:set FLASK_APP=run.py
    ```
 
-2. Create the environment:
+5. Open the deployed app:
    ```bash
-   eb create worldwide-visa-check-env
+   heroku open
    ```
 
-3. Deploy:
+### AWS (Elastic Beanstalk):
+Alternatively, you can deploy the application to AWS using Elastic Beanstalk for scalability.
+
+## ToDo:
+
+- [ ] **Improve UI/UX**
+- [ ] Enhance the UI for better user experience (mobile and desktop).
+  
+- [ ] **Extend Visa Validation Logic**
+- [ ] Integrate real-time visa validation APIs (if available).
+  
+- [ ] **Cloud Storage Integration**
+- [ ] Use AWS S3 or other cloud storage to store uploaded images.
+
+
+## Contribution:
+
+1. Fork the repository.
+2. Create a new feature branch:
    ```bash
-   eb deploy
+   git checkout -b feature/your-feature
    ```
 
----
+3. Commit your changes:
+   ```bash
+   git commit -m "Add your feature"
+   ```
 
-## Future Enhancements
+4. Push the branch to GitHub:
+   ```bash
+   git push origin feature/your-feature
+   ```
 
-- **Visa API Integration**: Extend the visa validation by integrating with government or third-party APIs to perform real-time visa checks.
-- **Cloud Storage**: Use AWS S3 or similar services to store passport images.
-- **Internationalization**: Add support for multiple languages for global users.
-- **Mobile Compatibility**: Improve the UI for mobile users and consider developing a mobile application.
+5. Create a Pull Request on the main repository.
 
----
+## License:
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more information.
+```
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
----
-
-## Contributors
-
-- **Fahmi Farid** (Lead Developer)
-- **Other Contributors**
+Let me know if you'd like further changes!
